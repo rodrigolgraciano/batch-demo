@@ -1,7 +1,7 @@
 package com.devnexus.batch.demo.listener;
 
 
-import com.devnexus.batch.demo.domain.Person;
+import com.devnexus.batch.demo.domain.Race;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.BatchStatus;
@@ -28,11 +28,11 @@ public class JobCompletionNotificationListener extends JobExecutionListenerSuppo
     if(jobExecution.getStatus() == BatchStatus.COMPLETED) {
       log.warn("!!! JOB FINISHED! Time to verify the results");
 
-      jdbcTemplate.query("SELECT first_name, last_name FROM people",
-        (rs, row) -> new Person(
-          rs.getString(1),
+      jdbcTemplate.query("SELECT position , pilot FROM championship",
+        (rs, row) -> new Race(
+          rs.getInt(1),
           rs.getString(2))
-      ).forEach(person -> log.info("Found <" + person + "> in the database."));
+      ).forEach(race -> log.info("Found <" + race + "> in the database."));
     }
   }
 }

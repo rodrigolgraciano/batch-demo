@@ -1,7 +1,6 @@
 package com.devnexus.batch.demo.configuration;
 
 
-import com.devnexus.batch.demo.listener.JobCompletionNotificationListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.Job;
@@ -24,9 +23,9 @@ import org.springframework.core.io.FileSystemResource;
 @Configuration
 public class SimpleBatchJob {
 
+  private static final Logger log = LoggerFactory.getLogger(SimpleBatchJob.class);
   private final JobBuilderFactory jobBuilderFactory;
   private final StepBuilderFactory stepBuilderFactory;
-  private static final Logger log = LoggerFactory.getLogger(SimpleBatchJob.class);
 
 
   public SimpleBatchJob(JobBuilderFactory jobBuilderFactory, StepBuilderFactory stepBuilderFactory) {
@@ -38,20 +37,19 @@ public class SimpleBatchJob {
   public FlatFileItemReader<FieldSet> simpleReader() {
     return new FlatFileItemReaderBuilder<FieldSet>()
       .name("SimpleItemReader")
-      .resource(new ClassPathResource("sample.csv"))
+      .resource(new ClassPathResource("race1_results.csv"))
       .delimited()
-      .names("firstName", "lastName")
+      .names("position", "pilot")
       .fieldSetMapper(new PassThroughFieldSetMapper())
       .build();
   }
 
   @Bean(name = "simpleWriter")
-  public FlatFileItemWriter<FieldSet> simpleWriter(){
+  public FlatFileItemWriter<FieldSet> simpleWriter() {
     return new FlatFileItemWriterBuilder<FieldSet>()
       .name("simpleFileWriter")
-      .resource(new FileSystemResource("/Users/graciano/Downloads/demo/sample.txt"))
+      .resource(new FileSystemResource("/Users/graciano/workspace/batch-demo/results.txt"))
       .delimited()
-      .delimiter("|")
       .fieldExtractor(new PassThroughFieldExtractor<>())
       .build();
   }
@@ -60,15 +58,14 @@ public class SimpleBatchJob {
   public Job simpleJob(Step simpleStep) {
     return jobBuilderFactory.get("simpleJob")
       .incrementer(new RunIdIncrementer())
-      .flow(simpleStep)
-      .end()
+      .start(simpleStep)
       .build();
   }
 
   @Bean
   public Step simpleStep() {
-    return stepBuilderFactory.get("step1")
-      .<FieldSet, FieldSet> chunk(2)
+    return stepBuilderFactory.get("simpleStep")
+      .<FieldSet, FieldSet>chunk(2)
       .reader(simpleReader())
       .writer(simpleWriter())
       .build();
