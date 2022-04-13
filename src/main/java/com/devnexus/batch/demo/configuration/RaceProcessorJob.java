@@ -56,6 +56,19 @@ public class RaceProcessorJob {
       .build();
   }
 
+/*
+  @Bean
+  public Step step1(JdbcBatchItemWriter<Race> multiWriter) {
+    return stepBuilderFactory.get("step1")
+      .<Race, Race>chunk(2)
+      .reader(raceReader())
+      .processor(processor())
+      .writer(multiWriter)
+      .build();
+  }
+*/
+
+
   @Bean
   public Step step1(JdbcBatchItemWriter<Race> multiWriter) {
     return stepBuilderFactory.get("step1")
@@ -75,7 +88,6 @@ public class RaceProcessorJob {
         @Override
         public void onSkipInWrite(Race item, Throwable t) {
           log.warn("Skipped on write error");
-
         }
 
         @Override
@@ -85,4 +97,6 @@ public class RaceProcessorJob {
       })
       .build();
   }
+
+
 }

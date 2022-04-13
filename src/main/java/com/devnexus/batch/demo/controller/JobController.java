@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
+
 @RestController("/job")
 public class JobController {
 
@@ -34,9 +36,8 @@ public class JobController {
   public void triggerJob(@PathVariable String jobName) {
     Job job = (Job) context.getBean(jobName);
     try {
-//      jobLauncher.run(job, new JobParametersBuilder().addString("now", LocalDateTime.now().toString()).toJobParameters());
-      jobLauncher.run(job, new JobParametersBuilder().addString("jobName", jobName).toJobParameters());
-      log.warn("Are you async?");
+      jobLauncher.run(job, new JobParametersBuilder().addString("now", LocalDateTime.now().toString()).toJobParameters());
+//      jobLauncher.run(job, new JobParametersBuilder().addString("jobName", jobName).toJobParameters());
 
     } catch (JobExecutionAlreadyRunningException e) {
       e.printStackTrace();

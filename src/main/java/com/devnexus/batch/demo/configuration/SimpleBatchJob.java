@@ -1,6 +1,5 @@
 package com.devnexus.batch.demo.configuration;
 
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.Job;
@@ -33,7 +32,7 @@ public class SimpleBatchJob {
     this.stepBuilderFactory = stepBuilderFactory;
   }
 
-  @Bean
+  @Bean(name = "simpleReader")
   public FlatFileItemReader<FieldSet> simpleReader() {
     return new FlatFileItemReaderBuilder<FieldSet>()
       .name("SimpleItemReader")
@@ -65,7 +64,7 @@ public class SimpleBatchJob {
   @Bean
   public Step simpleStep() {
     return stepBuilderFactory.get("simpleStep")
-      .<FieldSet, FieldSet>chunk(2)
+      .<FieldSet, FieldSet>chunk(1)
       .reader(simpleReader())
       .writer(simpleWriter())
       .build();
