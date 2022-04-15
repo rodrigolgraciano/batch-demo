@@ -17,6 +17,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
 
+/**
+ * Endpoint to listen for job requests.
+ * Open to discuss
+ * <li>JobParameters</li>
+ * <li>Sync x Async Job launchers</li>
+ * <li>Job exceptions</li>
+ */
 @RestController("/job")
 public class JobController {
 
@@ -24,7 +31,6 @@ public class JobController {
   private final JobLauncher jobLauncher;
   private final ApplicationContext context;
   private static final Logger log = LoggerFactory.getLogger(JobController.class);
-
 
   public JobController(@Qualifier("asyncJobLauncher") JobLauncher asyncJobLauncher, @Qualifier("jobLauncher") JobLauncher jobLauncher, ApplicationContext context) {
     this.asyncJobLauncher = asyncJobLauncher;
@@ -37,17 +43,14 @@ public class JobController {
     Job job = (Job) context.getBean(jobName);
     try {
       jobLauncher.run(job, new JobParametersBuilder().addString("now", LocalDateTime.now().toString()).toJobParameters());
-//      jobLauncher.run(job, new JobParametersBuilder().addString("jobName", jobName).toJobParameters());
-
     } catch (JobExecutionAlreadyRunningException e) {
-      e.printStackTrace();
+      log.warn("JobExecutionAlreadyRunningException " + e);
     } catch (JobRestartException e) {
       log.warn("JobRestartException " + e);
     } catch (JobInstanceAlreadyCompleteException e) {
       log.warn("JobInstanceAlreadyCompleteException " + e);
-      e.printStackTrace();
     } catch (JobParametersInvalidException e) {
-      e.printStackTrace();
+      log.warn("JobParametersInvalidException " + e);
     }
   }
 }

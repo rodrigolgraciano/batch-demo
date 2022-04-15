@@ -24,6 +24,9 @@ import org.springframework.core.io.Resource;
 
 import javax.sql.DataSource;
 
+/**
+ * Explains the benefits and constraints of MultiFileReader
+ */
 @Configuration
 public class MultiFileJob {
 

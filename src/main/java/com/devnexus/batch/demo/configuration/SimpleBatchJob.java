@@ -19,13 +19,16 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 
+/**
+ * First demo. Introduces the concept of Job, Step, Reader, Writer
+ * Reads from File and writer to File
+ */
 @Configuration
 public class SimpleBatchJob {
 
   private static final Logger log = LoggerFactory.getLogger(SimpleBatchJob.class);
   private final JobBuilderFactory jobBuilderFactory;
   private final StepBuilderFactory stepBuilderFactory;
-
 
   public SimpleBatchJob(JobBuilderFactory jobBuilderFactory, StepBuilderFactory stepBuilderFactory) {
     this.jobBuilderFactory = jobBuilderFactory;

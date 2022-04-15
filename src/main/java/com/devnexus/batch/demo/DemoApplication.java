@@ -4,6 +4,9 @@ import org.springframework.batch.core.configuration.annotation.EnableBatchProces
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+/**
+ * @EnableBatchProcessing injects many beans in the context to simplify the development
+ */
 @SpringBootApplication
 @EnableBatchProcessing
 public class DemoApplication {

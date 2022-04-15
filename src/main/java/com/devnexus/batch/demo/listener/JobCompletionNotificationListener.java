@@ -11,6 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
+/**
+ * Listener for the job. Can be used to explain jobs can have a parent
+ * and inherit the listeners from it
+ */
 @Component
 public class JobCompletionNotificationListener extends JobExecutionListenerSupport {
 

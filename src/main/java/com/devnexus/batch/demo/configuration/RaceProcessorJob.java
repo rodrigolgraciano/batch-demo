@@ -15,10 +15,18 @@ import org.springframework.batch.item.database.JdbcBatchItemWriter;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
 import org.springframework.batch.item.file.mapping.RecordFieldSetMapper;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 
+/**
+ * RaceJob definition class. This job reads from file and writes to DB.
+ * Introduces
+ * <li>Chunk</li>
+ * <li>Listeners - Job and Skip</li>
+ * <li>Skip/Retry</li>
+ */
 @Configuration
 public class RaceProcessorJob {
   private static final Logger log = LoggerFactory.getLogger(RaceProcessorJob.class);
@@ -30,7 +38,7 @@ public class RaceProcessorJob {
     this.stepBuilderFactory = stepBuilderFactory;
   }
 
-  @Bean
+  @Bean(name = "raceReader")
   public FlatFileItemReader<Race> raceReader() {
     return new FlatFileItemReaderBuilder<Race>()
       .name("simpleItemReader")
@@ -46,9 +54,8 @@ public class RaceProcessorJob {
     return new RaceItemProcessor();
   }
 
-
   @Bean(name = "importJob")
-  public Job importUserJob(JobCompletionNotificationListener listener, Step step1) {
+  public Job importUserJob(JobCompletionNotificationListener listener, @Qualifier("raceWriter") Step step1) {
     return jobBuilderFactory.get("importUserJob")
       .incrementer(new RunIdIncrementer())
       .listener(listener)
@@ -56,20 +63,7 @@ public class RaceProcessorJob {
       .build();
   }
 
-/*
-  @Bean
-  public Step step1(JdbcBatchItemWriter<Race> multiWriter) {
-    return stepBuilderFactory.get("step1")
-      .<Race, Race>chunk(2)
-      .reader(raceReader())
-      .processor(processor())
-      .writer(multiWriter)
-      .build();
-  }
-*/
-
-
-  @Bean
+  @Bean(name = "raceWriter")
   public Step step1(JdbcBatchItemWriter<Race> multiWriter) {
     return stepBuilderFactory.get("step1")
       .<Race, Race>chunk(2)

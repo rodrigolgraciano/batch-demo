@@ -7,6 +7,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
 
+/**
+ * Demonstrates how to create an asyncJobLauncher
+ */
 @Configuration
 public class AsyncLauncher {
 
