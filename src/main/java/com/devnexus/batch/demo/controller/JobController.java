@@ -11,8 +11,11 @@ import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteExcep
 import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
@@ -39,7 +42,7 @@ public class JobController {
   }
 
   @GetMapping("/trigger/{jobName}")
-  public void triggerJob(@PathVariable String jobName) {
+  public String triggerJob(@PathVariable String jobName) {
     Job job = (Job) context.getBean(jobName);
     try {
       jobLauncher.run(job, new JobParametersBuilder().addString("now", LocalDateTime.now().toString()).toJobParameters());
@@ -52,5 +55,6 @@ public class JobController {
     } catch (JobParametersInvalidException e) {
       log.warn("JobParametersInvalidException " + e);
     }
+    return "200-OK";
   }
 }

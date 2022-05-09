@@ -25,13 +25,12 @@ public class RaceItemProcessor implements ItemProcessor<Race, Race> {
     final String pilot = race.pilot().toUpperCase();
 
     if (position == 2) {
-      log.warn("Exception while reading {}", race);
-      throw new Exception("Exception while reading");
+      log.warn("Exception while processing {}", race);
+      throw new Exception("Exception while processing");
     }
 
-    final Race processedRace = new Race(position, pilot);
+    return new Race(position, pilot);
 
-    return processedRace;
   }
 
 

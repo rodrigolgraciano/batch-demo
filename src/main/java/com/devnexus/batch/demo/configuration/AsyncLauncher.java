@@ -6,6 +6,7 @@ import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 /**
  * Demonstrates how to create an asyncJobLauncher
@@ -13,7 +14,7 @@ import org.springframework.core.task.SimpleAsyncTaskExecutor;
 @Configuration
 public class AsyncLauncher {
 
-  private JobRepository jobRepository;
+  private final JobRepository jobRepository;
 
   public AsyncLauncher(JobRepository jobRepository) {
     this.jobRepository = jobRepository;
@@ -23,7 +24,7 @@ public class AsyncLauncher {
   public JobLauncher simpleJobLauncher() throws Exception {
     SimpleJobLauncher jobLauncher = new SimpleJobLauncher();
     jobLauncher.setJobRepository(jobRepository);
-    jobLauncher.setTaskExecutor(new SimpleAsyncTaskExecutor());
+    jobLauncher.setTaskExecutor(new ThreadPoolTaskExecutor());
     jobLauncher.afterPropertiesSet();
     return jobLauncher;
   }
