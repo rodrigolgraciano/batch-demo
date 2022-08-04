@@ -1,7 +1,5 @@
-package com.devnexus.batch.demo.configuration;
+package com.rh.batch.demo.configuration;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
@@ -26,7 +24,6 @@ import org.springframework.core.io.FileSystemResource;
 @Configuration
 public class SimpleBatchJob {
 
-  private static final Logger log = LoggerFactory.getLogger(SimpleBatchJob.class);
   private final JobBuilderFactory jobBuilderFactory;
   private final StepBuilderFactory stepBuilderFactory;
 

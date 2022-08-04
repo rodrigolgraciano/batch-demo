@@ -1,8 +1,9 @@
-package com.devnexus.batch.demo.processor;
+package com.rh.batch.demo.processor;
 
-import com.devnexus.batch.demo.domain.Race;
+import com.rh.batch.demo.domain.Race;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.batch.item.ItemProcessor;
 
 /**

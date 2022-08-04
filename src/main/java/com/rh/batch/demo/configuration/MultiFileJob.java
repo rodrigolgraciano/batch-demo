@@ -1,6 +1,6 @@
-package com.devnexus.batch.demo.configuration;
+package com.rh.batch.demo.configuration;
 
-import com.devnexus.batch.demo.domain.Race;
+import com.rh.batch.demo.domain.Race;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.Job;
@@ -30,7 +30,6 @@ import javax.sql.DataSource;
 @Configuration
 public class MultiFileJob {
 
-  private static final Logger log = LoggerFactory.getLogger(MultiFileJob.class);
   private final JobBuilderFactory jobBuilderFactory;
   private final StepBuilderFactory stepBuilderFactory;
   @Value("classpath:race*.csv")

@@ -8,7 +8,7 @@
 		<version>2.6.6</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.devnexus.batch</groupId>
+	<groupId>com.rh.batch</groupId>
 	<artifactId>batch-demo</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>demo</name>

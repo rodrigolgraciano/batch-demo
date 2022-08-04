@@ -1,6 +1,6 @@
-package com.devnexus.batch.demo.configuration;
+package com.rh.batch.demo.configuration;
 
-import com.devnexus.batch.demo.domain.Race;
+import com.rh.batch.demo.domain.Race;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.Job;
@@ -74,6 +74,7 @@ public class MultiStepJob {
     try {
       Thread.sleep(5000);
     } catch (InterruptedException e) {
+      log.error( "Error reading from db");
       e.printStackTrace();
     }
     return new JdbcCursorItemReaderBuilder<Race>()

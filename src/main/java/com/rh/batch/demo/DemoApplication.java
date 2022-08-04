@@ -1,4 +1,4 @@
-package com.devnexus.batch.demo;
+package com.rh.batch.demo;
 
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.boot.SpringApplication;

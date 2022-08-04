@@ -1,10 +1,11 @@
-package com.devnexus.batch.demo.configuration;
+package com.rh.batch.demo.configuration;
 
-import com.devnexus.batch.demo.domain.Race;
-import com.devnexus.batch.demo.listener.JobCompletionNotificationListener;
-import com.devnexus.batch.demo.processor.RaceItemProcessor;
+import com.rh.batch.demo.domain.Race;
+import com.rh.batch.demo.listener.JobCompletionNotificationListener;
+import com.rh.batch.demo.processor.RaceItemProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.SkipListener;
 import org.springframework.batch.core.Step;
