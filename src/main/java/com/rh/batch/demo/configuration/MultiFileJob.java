@@ -1,8 +1,6 @@
 package com.rh.batch.demo.configuration;
 
 import com.rh.batch.demo.domain.Race;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
@@ -69,11 +67,11 @@ public class MultiFileJob {
 
 
   @Bean
-  public Step multiFileStep(JdbcBatchItemWriter<Race> writer) {
+  public Step multiFileStep(JdbcBatchItemWriter<Race> multiWriter) {
     return stepBuilderFactory.get("multiFileStep")
       .<FieldSet, FieldSet>chunk(2)
       .reader(multiFileReader())
-      .writer(writer)
+      .writer(multiWriter)
       .build();
   }
 
@@ -81,7 +79,7 @@ public class MultiFileJob {
   public JdbcBatchItemWriter<Race> multiWriter(DataSource dataSource) {
     return new JdbcBatchItemWriterBuilder<Race>()
       .sql("INSERT INTO championship (position, pilot) VALUES (:position, :pilot)")
-      .itemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<Race>())
+      .itemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<>())
       .dataSource(dataSource)
       .build();
   }

@@ -40,17 +40,21 @@ public class JobController {
 
   @GetMapping("/trigger/{jobName}")
   public String triggerJob(@PathVariable String jobName) {
-    Job job = (Job) context.getBean(jobName);
+    return executeJob( jobName, jobLauncher );
+  }
+
+  @GetMapping("/trigger-async/{jobName}")
+  public String triggerAsyncJob(@PathVariable String jobName) {
+    return executeJob( jobName, asyncJobLauncher );
+  }
+
+  private String executeJob(@PathVariable String jobName, JobLauncher asyncJobLauncher) {
+    Job job = (Job) context.getBean( jobName);
     try {
-      jobLauncher.run(job, new JobParametersBuilder().addString("now", LocalDateTime.now().toString()).toJobParameters());
-    } catch (JobExecutionAlreadyRunningException e) {
-      log.warn("JobExecutionAlreadyRunningException", e);
-    } catch (JobRestartException e) {
-      log.warn("JobRestartException ", e);
-    } catch (JobInstanceAlreadyCompleteException e) {
-      log.warn("JobInstanceAlreadyCompleteException ", e);
-    } catch (JobParametersInvalidException e) {
-      log.warn("JobParametersInvalidException ", e);
+      asyncJobLauncher.run( job, new JobParametersBuilder().addString( "now", LocalDateTime.now().toString()).toJobParameters());
+    } catch (JobExecutionAlreadyRunningException | JobRestartException | JobInstanceAlreadyCompleteException | JobParametersInvalidException e) {
+      log.warn("Exception {} while running the job {}", e.getMessage(), jobName);
+      return "500-Error";
     }
     return "200-OK";
   }
