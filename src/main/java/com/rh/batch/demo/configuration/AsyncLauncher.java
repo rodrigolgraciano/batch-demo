@@ -5,6 +5,7 @@ import org.springframework.batch.core.launch.support.SimpleJobLauncher;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 /**
@@ -23,8 +24,19 @@ public class AsyncLauncher {
   public JobLauncher simpleJobLauncher() throws Exception {
     SimpleJobLauncher jobLauncher = new SimpleJobLauncher();
     jobLauncher.setJobRepository(jobRepository);
-    jobLauncher.setTaskExecutor(new ThreadPoolTaskExecutor());
+    jobLauncher.setTaskExecutor(taskExecutor());
     jobLauncher.afterPropertiesSet();
     return jobLauncher;
+  }
+
+  @Bean
+  TaskExecutor taskExecutor() {
+    ThreadPoolTaskExecutor t = new ThreadPoolTaskExecutor();
+    t.setCorePoolSize(10);
+    t.setMaxPoolSize(100);
+    t.setQueueCapacity(50);
+    t.setAllowCoreThreadTimeOut(true);
+    t.setKeepAliveSeconds(120);
+    return t;
   }
 }

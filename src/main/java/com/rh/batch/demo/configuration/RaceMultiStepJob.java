@@ -36,35 +36,35 @@ import javax.sql.DataSource;
  * Multistep job. Starting point to cover step-flow
  */
 @Configuration
-public class MultiStepJob {
+public class RaceMultiStepJob {
 
-	private static final Logger log = LoggerFactory.getLogger( MultiStepJob.class );
+	private static final Logger log = LoggerFactory.getLogger( RaceMultiStepJob.class );
 	private final JobBuilderFactory jobBuilderFactory;
 	private final StepBuilderFactory stepBuilderFactory;
 	private final DataSource dataSource;
 
-	public MultiStepJob(JobBuilderFactory jobBuilderFactory, StepBuilderFactory stepBuilderFactory, DataSource dataSource) {
+	public RaceMultiStepJob(JobBuilderFactory jobBuilderFactory, StepBuilderFactory stepBuilderFactory, DataSource dataSource) {
 		this.jobBuilderFactory = jobBuilderFactory;
 		this.stepBuilderFactory = stepBuilderFactory;
 		this.dataSource = dataSource;
 	}
 
-	@Bean(name = "multiStepsJob")
-	public Job multiStepJob(@Qualifier("multiStep1") Step multiStep1, Step multiStep2) {
+	@Bean(name = "importRaceMultiStepJob")
+	public Job multiStepJob(@Qualifier("raceMultiStep1") Step raceMultiStep1, Step raceMultiStep2) {
 		return jobBuilderFactory
 				.get( "MultiStepJob" )
 				.incrementer( new RunIdIncrementer() )
-				.start( multiStep1 )
-				.next( multiStep2 )
+				.start( raceMultiStep1 )
+				.next( raceMultiStep2 )
 				.build();
 	}
 
-	@Bean(name = "multiStep1")
-	public Step multiStep1(@Qualifier("raceReader") FlatFileItemReader<Race> raceReader, JdbcBatchItemWriter<Race> multiWriter) {
+	@Bean(name = "raceMultiStep1")
+	public Step multiStep1(@Qualifier("raceReader") FlatFileItemReader<Race> raceReader, JdbcBatchItemWriter<Race> raceWriter) {
 		return stepBuilderFactory.get( "step1" )
 				.<Race, Race>chunk( 2 )
 				.reader( raceReader )
-				.writer( multiWriter )
+				.writer( raceWriter )
 				.build();
 	}
 
@@ -88,7 +88,7 @@ public class MultiStepJob {
 				.build();
 	}
 
-	@Bean(name = "multiStep2")
+	@Bean(name = "raceMultiStep2")
 	public Step multiStep2(JdbcCursorItemReader dbReader, @Qualifier("step2Writer") FlatFileItemWriter<Race> step2Writer) {
 		return stepBuilderFactory.get( "multiStep2" )
 				.<Race, Race>chunk( 2 )

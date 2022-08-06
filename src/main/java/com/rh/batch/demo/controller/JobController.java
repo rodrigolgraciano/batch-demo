@@ -48,10 +48,10 @@ public class JobController {
     return executeJob( jobName, asyncJobLauncher );
   }
 
-  private String executeJob(@PathVariable String jobName, JobLauncher asyncJobLauncher) {
+  private String executeJob(@PathVariable String jobName, JobLauncher jobLauncher) {
     Job job = (Job) context.getBean( jobName);
     try {
-      asyncJobLauncher.run( job, new JobParametersBuilder().addString( "now", LocalDateTime.now().toString()).toJobParameters());
+      jobLauncher.run( job, new JobParametersBuilder().addString( "now", LocalDateTime.now().toString()).toJobParameters());
     } catch (JobExecutionAlreadyRunningException | JobRestartException | JobInstanceAlreadyCompleteException | JobParametersInvalidException e) {
       log.warn("Exception {} while running the job {}", e.getMessage(), jobName);
       return "500-Error";
