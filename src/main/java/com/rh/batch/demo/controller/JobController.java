@@ -45,7 +45,9 @@ public class JobController {
 
   @GetMapping("/trigger-async/{jobName}")
   public String triggerAsyncJob(@PathVariable String jobName) {
-    return executeJob( jobName, asyncJobLauncher );
+    String s = executeJob(jobName, asyncJobLauncher);
+    log.info("Running the job with an AsyncExecutor");
+    return s;
   }
 
   private String executeJob(@PathVariable String jobName, JobLauncher jobLauncher) {
