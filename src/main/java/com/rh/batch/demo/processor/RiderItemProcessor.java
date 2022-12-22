@@ -18,6 +18,6 @@ public class RiderItemProcessor implements ItemProcessor<Rider, Rider> {
   @Override
   public Rider process(final Rider rider){
     log.info("Processing the race result {}", rider);
-    return new Rider(rider.position(), rider.name().toUpperCase(), rider.team(), rider.times());
+    return new Rider(rider.position(), rider.name().toUpperCase().trim(), rider.team(), rider.times());
   }
 }

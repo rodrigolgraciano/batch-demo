@@ -24,7 +24,7 @@ import java.time.LocalDateTime;
  * <li>Sync x Async Job launchers</li>
  * <li>Job exceptions</li>
  */
-@RestController("/job")
+//@RestController("/job")
 public class JobController {
 
   private final JobLauncher asyncJobLauncher;

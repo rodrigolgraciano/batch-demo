@@ -8,7 +8,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @EnableBatchProcessing injects many beans in the context to simplify the development
  */
 @SpringBootApplication
-@EnableBatchProcessing
 public class DemoApplication {
 
   public static void main(String[] args) {

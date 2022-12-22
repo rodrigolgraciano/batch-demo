@@ -11,7 +11,10 @@ import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
+import org.springframework.batch.core.repository.JobRepository;
+import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider;
 import org.springframework.batch.item.database.JdbcBatchItemWriter;
 import org.springframework.batch.item.database.JdbcCursorItemReader;
@@ -26,9 +29,11 @@ import org.springframework.batch.item.file.transform.PassThroughFieldExtractor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.jdbc.core.DataClassRowMapper;
+import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
 
@@ -36,23 +41,14 @@ import javax.sql.DataSource;
  * Multistep job. Starting point to cover step-flow
  */
 @Configuration
+@Profile("multiStep")
 public class RaceMultiStepJob {
 
 	private static final Logger log = LoggerFactory.getLogger( RaceMultiStepJob.class );
-	private final JobBuilderFactory jobBuilderFactory;
-	private final StepBuilderFactory stepBuilderFactory;
-	private final DataSource dataSource;
 
-	public RaceMultiStepJob(JobBuilderFactory jobBuilderFactory, StepBuilderFactory stepBuilderFactory, DataSource dataSource) {
-		this.jobBuilderFactory = jobBuilderFactory;
-		this.stepBuilderFactory = stepBuilderFactory;
-		this.dataSource = dataSource;
-	}
-
-	@Bean(name = "importRaceMultiStepJob")
-	public Job multiStepJob(@Qualifier("raceMultiStep1") Step raceMultiStep1, Step raceMultiStep2) {
-		return jobBuilderFactory
-				.get( "MultiStepJob" )
+	@Bean
+	public Job multiStepJob(JobRepository jobRepository, Step raceMultiStep1, Step raceMultiStep2) {
+		return new JobBuilder( "MultiStepJob", jobRepository )
 				.incrementer( new RunIdIncrementer() )
 				.start( raceMultiStep1 )
 				.next( raceMultiStep2 )
@@ -60,9 +56,9 @@ public class RaceMultiStepJob {
 	}
 
 	@Bean(name = "raceMultiStep1")
-	public Step multiStep1(@Qualifier("raceReader") FlatFileItemReader<Race> raceReader, JdbcBatchItemWriter<Race> raceWriter) {
-		return stepBuilderFactory.get( "step1" )
-				.<Race, Race>chunk( 2 )
+	public Step multiStep1(JobRepository jobRepository, PlatformTransactionManager transactionManager, @Qualifier("raceReader") FlatFileItemReader<Race> raceReader, JdbcBatchItemWriter<Race> raceWriter) {
+		return new StepBuilder( "step1", jobRepository )
+				.<Race, Race>chunk( 2, transactionManager )
 				.reader( raceReader )
 				.writer( raceWriter )
 				.build();
@@ -89,16 +85,16 @@ public class RaceMultiStepJob {
 	}
 
 	@Bean(name = "raceMultiStep2")
-	public Step multiStep2(JdbcCursorItemReader dbReader, @Qualifier("step2Writer") FlatFileItemWriter<Race> step2Writer) {
-		return stepBuilderFactory.get( "multiStep2" )
-				.<Race, Race>chunk( 2 )
-				.reader( dbReader )
+	public Step multiStep2(JobRepository jobRepository, PlatformTransactionManager transactionManager, @Qualifier("step2Writer") FlatFileItemWriter<Race> step2Writer) {
+		return new StepBuilder("multiStep2", jobRepository )
+				.<Race, Race>chunk( 2, transactionManager )
+				.reader( dbReader(null) )
 				.writer( step2Writer )
 				.build();
 	}
 
 	@Bean(name = "dbReader")
-	public JdbcCursorItemReader dbReader() {
+	public JdbcCursorItemReader dbReader(DataSource dataSource) {
 		try {
 			Thread.sleep( 5000 );
 		}

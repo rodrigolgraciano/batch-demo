@@ -12,7 +12,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 /**
  * Demonstrates how to create an asyncJobLauncher
  */
-@Configuration
+//@Configuration
 public class AsyncLauncher {
 
   private final JobRepository jobRepository;
