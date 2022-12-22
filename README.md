@@ -1,23 +1,15 @@
 # Spring Batch demo
 
-This repository is part of the talk Batch Processing in Action presented by Rodrigo Graciano & Hillmer Chona
+Updated to Java 17 and Spring Batch 5.
 
-* Run `mvn spring-boot:run`
+There are multiple profiles, one for each job.
 
-* Rest endpoint
-
-  * **GET:** http://localhost:8080/trigger/importTourResults: Batch job to import from text file to a relational database
-  * **GET:** http://localhost:8080/trigger/importTourResultsFaultTolerant: Batch job to import from text file to a relational database applying fault-tolerant features
-  * **GET:** http://localhost:8080/trigger/importRaceMultiFileJob: Batch job to import from text file to a relational database
-  * **GET:** http://localhost:8080/trigger/importRaceMultiStepJob: Batch job to import from text file to a relational database
-
-
-* Rest endpoint asynchronous
-
-  * **GET:** http://localhost:8080/trigger-async/importTourResults: Batch job to import from text file to a relational database
-  * **GET:** http://localhost:8080/trigger-async/importTourResultsFaultTolerant: Batch job to import from text file to a relational database applying fault-tolerant features
-  * **GET:** http://localhost:8080/trigger-async/importRaceMultiFileJob: Batch job to import from text file to a relational database
-  * **GET:** http://localhost:8080/trigger-async/importRaceMultiStepJob: Batch job to import from text file to a relational database
+Profile -> Job  -> Job Description
+* simple ->  SimpleBatchJob -> read from file and write to file
+* multiFile -> RaceMultiFile -> Reads from multiple files and write to DB
+* tour -> TourProcessorJob -> Introduces Processor, Chunk, and Listeners
+* tourFault -> TourFaultTolerantJob -> Introduces Error Handling
+* multiStep -> RaceMultiStepJob -> Introduces Multiple Steps
 
 
 
