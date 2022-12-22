@@ -27,8 +27,8 @@ import javax.sql.DataSource;
 /**
  * RaceJob definition class. This job reads from file and writes to DB.
  * Introduces
- * <li>Chunk</li>
- * <li>Listeners - Job and Skip</li>
+ * <li>Listeners - Skip</li>
+ * <li>FaultTolerance - Skip Limit</li>
  * <li>Skip/Retry</li>
  */
 @Configuration
